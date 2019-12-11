@@ -1,0 +1,14 @@
+# export SCRAPY_WARCIO_SETTINGS='/path/to/settings.yml'
+
+---
+warc_spec: https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/
+max_warc_size: 10000000000  # 10GB
+
+collection: ~ # collection name
+description: ~ # collection description
+operator: ~ # operator email address
+robots: ~  # robots policy
+user_agent: ~ # your user-agent
+warc_prefix: ~ # WARC filename prefix
+warc_dest: ~ # WARC files destination
+...
