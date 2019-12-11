@@ -10,7 +10,7 @@ Install
 -------
 
 ```shell
-$ pip install scrapy_warcio
+$ pip install scrapy-warcio
 ```
 
 
