@@ -16,7 +16,7 @@ setup(
     long_description_content_type="text/markdown",
     name='scrapy_warcio',
     packages=find_packages(),
-    url='https://github.com/internetarchive/scrapy_warcio',
+    url='https://github.com/internetarchive/scrapy-warcio',
     version='0.0.1',
     zip_safe=False
 )
