@@ -14,9 +14,9 @@ setup(
     install_requires=['python-magic', 'pyyaml', 'scrapy', 'warctools'],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    name='scrapy_warcio',
+    name='scrapy-warcio',
     packages=find_packages(),
     url='https://github.com/internetarchive/scrapy-warcio',
-    version='0.0.1',
+    version='0.0.2',
     zip_safe=False
 )
