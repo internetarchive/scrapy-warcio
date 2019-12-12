@@ -17,7 +17,16 @@ $ pip install scrapy-warcio
 Usage
 -----
 
-1. Copy and edit `scrapy_warcio` distributed `settings.yml` with your
+1. Create a project and spider:<br>
+   https://docs.scrapy.org/en/latest/intro/tutorial.html
+
+```
+$ scrapy startproject <project>
+$ cd <project>
+$ scrapy genspider <spider> example.com
+```
+
+2. Copy and edit `scrapy_warcio` distributed `settings.yml` with your
    configuration settings:
 
 ```yaml
@@ -35,17 +44,23 @@ warc_dest: ~ # WARC files destination
 ...
 ```
 
-2. Export `SCRAPY_WARCIO_SETTINGS='/path/to/settings.yml'`
+3. Export `SCRAPY_WARCIO_SETTINGS=/path/to/settings.yml`
 
-3. Enable `DownloaderMiddlewares` in `<spider>/<spider>/settings.py`
+4. Enable `DOWNLOADER_MIDDLEWARES` in `<project>/<project>/settings.py`:
 
-4. Use `scrapy_warcio` methods in `<spider>/<spider>/middlewares.py`:
+```
+DOWNLOADER_MIDDLEWARES = {
+    'warcio.middlewares.WarcioDownloaderMiddleware': 543,
+}
+```
+
+5. Import and use `scrapy_warcio` methods in `<project>/<project>/middlewares.py`:
 
 ```python
 import scrapy_warcio
 
 
-class <spider>DownloaderMiddlewares:
+class YourSpiderDownloaderMiddlewares:
 
     def __init__(self):
         self.warcio = scrapy_warcio.ScrapyWarcIo()
@@ -55,6 +70,7 @@ class <spider>DownloaderMiddlewares:
         # set WARC-Date for both request and response
         request.meta['WARC-Date'] = scrapy_warcio.warc_date()
 
+        # optional
         spider.logger.info('warcio request: %s', request.url)
 
         return None
@@ -64,6 +80,7 @@ class <spider>DownloaderMiddlewares:
         # write response and request
         self.warcio.write_response(response)
 
+        # optional
         spider.logger.info('warcio response: %s', response.url)
         spider.logger.info('warc_count: %s', self.warcio.warc_count)
         spider.logger.info('warc_fname: %s', self.warcio.warc_fname)
@@ -72,7 +89,13 @@ class <spider>DownloaderMiddlewares:
         return response
 ```
 
-5. Upload your Scrapy WARCs to your favorite archive!
+6. Validate your warcs with `internetarchive/warctools`:
+
+```shell
+$ warcvalid WARC.warc.gz
+```
+
+7. Upload your WARC(s) to your favorite web archive!
 
 
 Help
