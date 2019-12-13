@@ -10,13 +10,31 @@ import sys
 import uuid
 
 from datetime import datetime
-from urllib.parse import urlparse
+
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 import magic
 import yaml
 
 from hanzo import warctools  # internetarchive/warctools
 from scrapy import __version__ as scrapy_version
+
+
+def _bytes(val):
+    '''
+    always returns bytes from str or bytes
+    '''
+    return val if isinstance(val, bytes) else bytes(val, 'utf-8')
+
+
+def _str(val):
+    '''
+    always returns string from str or bytes
+    '''
+    return val if isinstance(val, str) else str(val, 'utf-8')
 
 
 def warc_date():
@@ -49,6 +67,7 @@ class ScrapyWarcIo:
     warc_size = 0
 
     def __init__(self):
+        self.log = logging.getLogger(__name__)
         self.max_serial = int('9' * self.WARC_SERIAL_ZFILL)
         self.req_date_set = False
 
@@ -81,7 +100,7 @@ class ScrapyWarcIo:
 
         if create_new_warc:
             self.warc_fname = self.warcfile()
-            logging.info('New WARC file: %s', self.warc_fname)
+            self.log.info('New WARC file: %s', self.warc_fname)
             self.write_warcinfo()
             self.warc_count += 1
 
@@ -116,7 +135,8 @@ class ScrapyWarcIo:
         headers = [http_line]
 
         for key in record.headers:
-            headers.append('{}: {}'.format(key, record.headers[key]))
+            val = record.headers[key]
+            headers.append('{}: {}'.format(_str(key), _str(val)))
 
         return self.WARC_LINE_SEP.join(headers)
 
@@ -188,11 +208,12 @@ class ScrapyWarcIo:
         mimetype = magic.from_buffer(body, mime=True)
         content = '{}{}{}'.format(self.get_headers(response),
                                   self.WARC_LINE_SEP * 2,
-                                  body)
+                                  _str(body))
 
         if mimetype:
             warc_headers.append(('WARC-Identified-Payload-Type', mimetype))
 
+        # write response
         self.write_record(headers=warc_headers,
                           content_type='application/http;msgtype=response',
                           content=content)
@@ -209,18 +230,26 @@ class ScrapyWarcIo:
         '''
         self.bump_serial(sys.getsizeof(content))
 
+        bheaders = []
+        for key, val in headers:
+            if isinstance(key, str):
+                key = key.encode('utf-8')
+            if isinstance(val, str):
+                val = val.encode('utf-8')
+            bheaders.append((key, val))
+
+        if isinstance(content, str):
+            content = content.encode('utf-8')
+
+        if isinstance(content_type, str):
+            content_type = content_type.encode('utf-8')
+
         with open(self.warc_fname, 'ab') as _fh:
-            content = (content_type, content.encode('utf-8'))
-            record = warctools.WarcRecord(headers=headers, content=content)
-            try:
-                record.write_to(_fh, gzip=True)
-                logging.info('Wrote %s bytes (%s) to file: %s',
-                             _fh.tell(), content_type, self.warc_fname)
-            except Exception as exc:
-                print('WarcRecord(headers, content) write failed')
-                print('headers:', headers)
-                print('content:', content)
-                raise ValueError(exc)
+            record = warctools.WarcRecord(headers=bheaders,
+                                          content=(content_type, content))
+            record.write_to(_fh, gzip=True)
+            self.log.info('Wrote %s bytes (%s) to file: %s',
+                          _fh.tell(), content_type, self.warc_fname)
 
     def write_request(self, request, concurrent_to):
         '''
@@ -237,15 +266,13 @@ class ScrapyWarcIo:
             ('WARC-Concurrent-To', concurrent_to),
         ]
 
-        content = []
-        headers = self.get_headers(request)
-
-        for item in headers:
-            content.append('{}: {}'.format(item, headers[item]))
+        content = '{}{}{}'.format(self.get_headers(request),
+                                  self.WARC_LINE_SEP * 2,
+                                  _str(request.body))
 
         self.write_record(headers=warc_headers,
                           content_type='application/http;msgtype=request',
-                          content='\n'.join(content))
+                          content=content)
 
     def write_warcinfo(self):
         '''
@@ -273,4 +300,4 @@ class ScrapyWarcIo:
 
         self.write_record(headers=headers,
                           content_type='application/warc-fields',
-                          content='\n'.join(content))
+                          content=self.WARC_LINE_SEP.join(content))
