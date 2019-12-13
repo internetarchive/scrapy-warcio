@@ -18,9 +18,6 @@ import yaml
 from hanzo import warctools  # internetarchive/warctools
 from scrapy import __version__ as scrapy_version
 
-__author__ = 'steve@archive.org'
-__version__ = '0.0.1'
-
 
 def warc_date():
     '''
