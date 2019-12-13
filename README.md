@@ -78,7 +78,7 @@ class YourSpiderDownloaderMiddlewares:
     def process_response(self, request, response, spider):
 
         # write response and request
-        self.warcio.write_response(response)
+        self.warcio.write(response, request)
 
         # optional
         spider.logger.info('warcio response: %s', response.url)
