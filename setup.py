@@ -16,7 +16,8 @@ setup(
     long_description_content_type="text/markdown",
     name='scrapy-warcio',
     packages=find_packages(),
+    tests_require=['pytest'],
     url='https://github.com/internetarchive/scrapy-warcio',
-    version='0.0.3',
+    version='0.0.4',
     zip_safe=False
 )
