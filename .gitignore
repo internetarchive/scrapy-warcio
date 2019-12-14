@@ -1,0 +1,8 @@
+*.*~
+*.pyc
+.gitignore
+.tox
+__pycache__
+build
+dist
+scrapy_warcio.egg-info
