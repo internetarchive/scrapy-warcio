@@ -66,26 +66,11 @@ class YourSpiderDownloaderMiddlewares:
         self.warcio = scrapy_warcio.ScrapyWarcIo()
 
     def process_request(self, request, spider):
-
-        # set WARC-Date for both request and response
         request.meta['WARC-Date'] = scrapy_warcio.warc_date()
-
-        # optional
-        spider.logger.info('warcio request: %s', request.url)
-
         return None
 
     def process_response(self, request, response, spider):
-
-        # write response and request
         self.warcio.write(response, request)
-
-        # optional
-        spider.logger.info('warcio response: %s', response.url)
-        spider.logger.info('warc_count: %s', self.warcio.warc_count)
-        spider.logger.info('warc_fname: %s', self.warcio.warc_fname)
-        spider.logger.info('warc_size: %s', self.warcio.warc_size)
-
         return response
 ```
 
