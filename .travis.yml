@@ -1,11 +1,9 @@
-sudo: false
-
 language: python
 
 python:
   - 2.7
   - 3.5
 
-command: pip install travis-tox
+install: pip install pytest
 
-script: tox  
+script: pytest
