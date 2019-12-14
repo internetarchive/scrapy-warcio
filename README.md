@@ -100,7 +100,7 @@ or
 TODO
 ----
 
-Making this a Scrapy extension may make it more useful:
+Making this a Scrapy extension may make it more useful:<br>
 https://docs.scrapy.org/en/latest/topics/extensions.html
 
 
