@@ -5,6 +5,8 @@ A Web Archive
 [WARC](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/)
 I/O module for Scrapy
 
+!["travis-ci"](https://travis-ci.com/internetarchive/scrapy-warcio.svg?branch=master)
+
 
 Install
 -------
