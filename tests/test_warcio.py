@@ -19,3 +19,7 @@ def test_warc_date():
     date = scrapy_warcio.warcio.warc_date()
     obj = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')
     assert isinstance(obj, datetime)
+
+
+def test_warc_write():
+    pass
