@@ -232,22 +232,15 @@ class ScrapyWarcIo:
 
         bheaders = []
         for key, val in headers:
-            if isinstance(key, str):
-                key = key.encode('utf-8')
-            if isinstance(val, str):
-                val = val.encode('utf-8')
-            bheaders.append((key, val))
-
-        if isinstance(content, str):
-            content = content.encode('utf-8')
-
-        if isinstance(content_type, str):
-            content_type = content_type.encode('utf-8')
+            bheaders.append((_bytes(key), _bytes(val)))
 
         with open(self.warc_fname, 'ab') as _fh:
-            record = warctools.WarcRecord(headers=bheaders,
-                                          content=(content_type, content))
+            record = warctools.WarcRecord(
+                headers=bheaders,
+                content=(_bytes(content_type), _bytes(content)))
+
             record.write_to(_fh, gzip=True)
+
             self.log.info('Wrote %s bytes (%s) to file: %s',
                           _fh.tell(), content_type, self.warc_fname)
 
