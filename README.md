@@ -39,7 +39,7 @@ max_warc_size: 10000000000  # 10GB
 collection: ~ # collection name
 description: ~ # collection description
 operator: ~ # operator email address
-robots: ~  # robots policy
+robots: ~  # robots policy (obey or ignore)
 user_agent: ~ # your user-agent
 warc_prefix: ~ # WARC filename prefix
 warc_dest: ~ # WARC files destination
