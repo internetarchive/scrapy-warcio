@@ -1,0 +1,12 @@
+---
+warc_spec: https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/
+max_warc_size: 10000000000  # 10GB
+
+collection: COLLECTION
+description: DESCRIPTION
+operator: OPERATOR
+robots: ROBOTS
+user_agent: UA
+warc_prefix: PREFIX
+warc_dest: DEST
+...
