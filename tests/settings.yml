@@ -8,5 +8,5 @@ operator: OPERATOR
 robots: ROBOTS
 user_agent: UA
 warc_prefix: PREFIX
-warc_dest: DEST
+warc_dest: tests
 ...

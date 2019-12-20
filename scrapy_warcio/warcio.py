@@ -161,7 +161,10 @@ class ScrapyWarcIo:
         fqdn = socket.gethostname().split('.')[0]
 
         warc_name = '-'.join([tla, timestamp, serial, fqdn]) + '.warc.gz'
-        warc_dest = self.config['warc_dest']
+        warc_dest = self.config['warc_dest'] or ''
+
+        if warc_dest and not os.path.exists(warc_dest):
+            raise IOError('warc_dest not found: {}'.format(warc_dest))
 
         fname = os.path.join(warc_dest, warc_name)
 

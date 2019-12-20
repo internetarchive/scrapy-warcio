@@ -27,7 +27,7 @@ def test_warcfile():
     os.environ['SCRAPY_WARCIO_SETTINGS'] = 'tests/settings.yml'
     warcio = scrapy_warcio.ScrapyWarcIo()
     fname = warcio.warcfile()
-    assert fname.startswith('DEST/PREFIX-')
+    assert fname.startswith('tests/PREFIX-')
     assert fname.endswith('.warc.gz')
 
 
