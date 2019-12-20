@@ -18,6 +18,6 @@ setup(
     packages=find_packages(),
     tests_require=['pytest'],
     url='https://github.com/internetarchive/scrapy-warcio',
-    version='0.0.5',
+    version='0.0.6',
     zip_safe=False
 )
