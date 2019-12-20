@@ -57,11 +57,13 @@ class ScrapyWarcIo:
         'operator',
         'robots',
         'user_agent',
+        'warc_dest',
         'warc_prefix',
         'warc_spec']
     WARC_LINE_SEP = '\r\n'
     WARC_SERIAL_ZFILL = 5
 
+    warc_dest = None
     warc_fname = None
     warc_count = 0
     warc_size = 0
@@ -158,7 +160,10 @@ class ScrapyWarcIo:
         serial = str(self.warc_count).zfill(self.WARC_SERIAL_ZFILL)
         fqdn = socket.gethostname().split('.')[0]
 
-        fname = '-'.join([tla, timestamp, serial, fqdn]) + '.warc.gz'
+        warc_name = '-'.join([tla, timestamp, serial, fqdn]) + '.warc.gz'
+        warc_dest = self.config['warc_dest']
+
+        fname = os.path.join(warc_dest, warc_name)
 
         if os.path.exists(fname):
             raise IOError('WARC file exists: {}'.format(fname))
