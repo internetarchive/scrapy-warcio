@@ -10,6 +10,10 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
+    data_files=[
+        ('', 'data/middlewares.py'),
+        ('', 'data/settings.yml'),
+    ],
     description='Scrapy WARC I/O',
     install_requires=['python-magic', 'pyyaml', 'scrapy', 'warctools'],
     long_description=long_description,
