@@ -48,21 +48,14 @@ warc_dest: ~ # WARC files destination
 
 3. Export `SCRAPY_WARCIO_SETTINGS=/path/to/settings.yml`
 
-4. Enable `DOWNLOADER_MIDDLEWARES` in `<project>/<project>/settings.py`:
-
-```
-DOWNLOADER_MIDDLEWARES = {
-    'warcio.middlewares.WarcioDownloaderMiddleware': 543,
-}
-```
-
-5. Import and use `scrapy_warcio` methods in `<project>/<project>/middlewares.py`:
+4. Add `WarcioDownloaderMiddleware` (distributed as `middlewares.py`)
+   to your `<project>/<project>/middlewares.py`:
 
 ```python
 import scrapy_warcio
 
 
-class YourSpiderDownloaderMiddlewares:
+class WarcioDownloaderMiddleware:
 
     def __init__(self):
         self.warcio = scrapy_warcio.ScrapyWarcIo()
@@ -74,6 +67,14 @@ class YourSpiderDownloaderMiddlewares:
     def process_response(self, request, response, spider):
         self.warcio.write(response, request)
         return response
+```
+
+5. Enable `WarcioDownloaderMiddleware` in `<project>/<project>/settings.py`:
+
+```
+DOWNLOADER_MIDDLEWARES = {
+    '<project>.middlewares.WarcioDownloaderMiddleware': 543,
+}
 ```
 
 6. Validate your warcs with `internetarchive/warctools`:
